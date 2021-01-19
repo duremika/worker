@@ -8,6 +8,7 @@ api_hash = '764c4e3babfd216ec38f564b542f2e0a'
 client = TelegramClient('session_name', api_id, api_hash)
 client.start()
 
+
 while True:
     dialogs = client.get_dialogs()
     for dialog in dialogs:
@@ -22,13 +23,17 @@ while True:
             target = dialog
             messages = client.get_messages(target, limit=30)
             for message in messages:
-                if message.reply_markup is not None:
-                    button = message.reply_markup.rows[0].buttons[0]
-                    if type(button) == tl.types.KeyboardButtonCallback:
-                        resp = client(tl.functions.messages.GetBotCallbackAnswerRequest(
-                            target,
-                            message.id,
-                            data=button.data
-                        ))
-                        time.sleep(3)
+                try:
+                    if message.reply_markup is not None:
+                        button = message.reply_markup.rows[0].buttons[0]
+                        if type(button) == tl.types.KeyboardButtonCallback:
+                            resp = client(tl.functions.messages.GetBotCallbackAnswerRequest(
+                                target,
+                                message.id,
+                                data=button.data
+                            ))
+                            time.sleep(3)
+                except:
+                    break
     time.sleep(random.randint(350, 500))
+
